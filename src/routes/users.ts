@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 router.post(
   "/register",
   async (req: express.Request, res: express.Response) => {
+    console.log("At register server side");
     try {
       let user = await User.findOne({
         email: req.body.email,
@@ -25,10 +26,11 @@ router.post(
           expiresIn: "1d",
         }
       );
+      console.log("TOEKN AT REGISTER END", token);
 
       res.cookie("auth_token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: true, //process.env.NODE_ENV === "production",
         maxAge: 86400000,
         sameSite: "none",
       });

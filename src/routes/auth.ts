@@ -21,10 +21,17 @@ router.get(
 );
 
 router.post("/logout", (req: Request, res: Response) => {
+  // res.cookie("auth_token", "", {
+  //   httpOnly: true,
+  //   secure: false, //process.env.NODE_ENV === "production",
+  //   maxAge: 86400000,
+  //   sameSite: "none",
+  // });
   res.cookie("auth_token", "", {
-    expires: new Date(0),
-    sameSite: "none",
-    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // Ensure secure is true in production
+    maxAge: 86400000,
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Use Lax for local dev
   });
   res.send();
 });
@@ -66,7 +73,7 @@ router.post(
       );
       res.cookie("auth_token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: true, //process.env.NODE_ENV === "production",
         maxAge: 86400000,
         sameSite: "none",
       });
