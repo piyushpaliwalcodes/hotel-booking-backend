@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth";
 import cookieParser from "cookie-parser";
 import { v2 as cloudinary } from "cloudinary";
 import myHotelRoutes from "./routes/my-hotels";
+import hotelRoutes from "./routes/hotels";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -31,6 +32,7 @@ const SERVERPORT = process.env.PORT;
 app.use("/api/auth", authRoutes);
 app.use("/api/users", UserRoutes);
 app.use("/api/hotels", myHotelRoutes);
+app.use("/api/searchhotels", hotelRoutes);
 
 app.listen(SERVERPORT, () => {
   console.log(`The server has started at port ${SERVERPORT}`);

@@ -10,7 +10,7 @@ router.get(
   "/validate-token",
   verifyToken,
   (req: express.Request, res: express.Response) => {
-    console.log("AT VALIDATE-TOKEN");
+   
     try {
       res.status(200).send({ userId: req.userId });
     } catch (error) {

@@ -1,12 +1,30 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import User from "../models/user";
 
 const router = express.Router();
 import jwt from "jsonwebtoken";
+import { verify } from "crypto";
+import verifyToken from "../middleware/auth";
+
+router.get("/me", verifyToken, async (req: Request, res: Response) => {
+  const userId = req.userId;
+
+  try {
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      res.status(400).json({ message: "User not found" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(501).json({ message: "INTERNAL SERVER ERROR" });
+  }
+});
+
 router.post(
   "/register",
   async (req: express.Request, res: express.Response) => {
-    console.log("At register server side");
     try {
       let user = await User.findOne({
         email: req.body.email,
@@ -17,6 +35,8 @@ router.post(
       }
 
       user = new User(req.body);
+      console.log("REGISTER USER", user);
+
       await user.save();
 
       const token = jwt.sign(
@@ -26,11 +46,10 @@ router.post(
           expiresIn: "1d",
         }
       );
-      console.log("TOEKN AT REGISTER END", token);
 
       res.cookie("auth_token", token, {
         httpOnly: true,
-        secure: true, //process.env.NODE_ENV === "production",
+        secure: true,
         maxAge: 86400000,
         sameSite: "none",
       });
