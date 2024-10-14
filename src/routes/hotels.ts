@@ -21,7 +21,7 @@ router.get("/search", async (req: Request, res: Response) => {
       case "pricePerNightAsc":
         sortOptions = { pricePerNight: 1 };
         break;
-      case "pricePerNightDesc":
+      case "pricePerNightDsc":
         sortOptions = { pricePerNight: -1 };
         break;
     }
@@ -34,7 +34,8 @@ router.get("/search", async (req: Request, res: Response) => {
       .sort(sortOptions)
       .skip(skip)
       .limit(pageSize);
-    const total = await Hotel.countDocuments();
+    const total = hotels.length;
+    // const total = await Hotel.countDocuments();
     const response: HotelSearchResponse = {
       data: hotels,
       pagination: {

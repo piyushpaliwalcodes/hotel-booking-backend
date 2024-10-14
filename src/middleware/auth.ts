@@ -14,6 +14,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   console.log(token, "TOKEN");
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
+    
   }
 
   try {
